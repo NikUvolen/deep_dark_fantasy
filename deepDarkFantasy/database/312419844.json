@@ -1,0 +1,18 @@
+{
+    "user_data": {
+        "state": "0",
+        "user_id": 312419844,
+        "number_daily_moves": 29
+    },
+    "game_data": {
+        "character": {
+            "name": "Kirill.png",
+            "hp": -418
+        }
+    },
+    "room": {
+        "enemy": {
+            "name": "Jorge.png"
+        }
+    }
+}
