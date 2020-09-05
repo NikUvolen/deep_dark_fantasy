@@ -3,7 +3,7 @@ from os.path import normpath
 from random import random, choice, randint
 
 
-class Game:
+class GameMechanics:
     def __init__(self):
         self.enemy = None
         self.common_enemy = ['Arthor.png', 'Jorge.png', 'Jozef.png', 'Lanselot.png']
@@ -30,6 +30,7 @@ class Game:
             }
         }
         template['user_data']["number_daily_moves"] -= 1
+        template['user_data']['room'] += 1
 
         with open(path, 'w') as file:
             json.dump(template, file, indent=4)
@@ -38,9 +39,9 @@ class Game:
         path = normpath(f'..\\database\\{user_id}.json')
         with open(path, 'r') as file:
             template = json.load(file)
-        template['user_data']["number_daily_moves"] -= 1
 
         if 'enemy' in template['room']:
+            template['user_data']["number_daily_moves"] -= 1
             hero_accuracy = 60
             hero_detection = 30
             if template['room']['enemy']['name'] in self.common_enemy:

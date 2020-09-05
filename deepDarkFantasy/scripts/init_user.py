@@ -19,14 +19,16 @@ def init_user(user_id, character_name='Kirill.png'):
             "user_data": {
                 "state": "0",
                 "user_id": user_id,
-                "number_daily_moves": 30
+                "number_daily_moves": 30,
+                "room": 0
             },
             "game_data": {
                 "character": {
                     "name": character_name,
                     "hp": 100
                 },
-            }
+            },
+            "room": {}
         }
         with open(path, 'w') as file:
             json.dump(template, file, indent=4)

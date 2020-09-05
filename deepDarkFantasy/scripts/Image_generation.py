@@ -1,9 +1,10 @@
+import io
 import os
 from os.path import normpath, join, isfile
 from json import load
 from PIL import Image, ImageDraw, ImageFont
 
-from scripts.gaming_mechanics.gaming_mechanics import Game
+from scripts.gaming_mechanics.gaming_mechanics import GameMechanics
 
 
 def finding_picture_enemy(enemy_name):
@@ -29,13 +30,17 @@ def generation_hp_bar(hp):
 
 
 def image_generation(user_id):
-    """ Функция для генерации картинки """
+    """
+    Функция для генерации картинки
+    :return: BytesIO
+    """
 
     path = normpath(f'..\\database\\{user_id}.json')
     with open(path, 'r') as file:
         data = load(file)
         bg_name = 'podzemelye3.png'
         hp = data["game_data"]["character"]["hp"]
+        room_number = data["user_data"]["room"]
         character_name = data["game_data"]["character"]["name"]
         enemy_name = data["room"]["enemy"]["name"] if 'enemy' in data["room"] else None
         print(enemy_name)
@@ -58,5 +63,10 @@ def image_generation(user_id):
 
     # Нанесение текста
     idraw.text(xy=(137, 12), text=str(hp), font=font)
+    idraw.text(xy=(860, 12), text=f'Room {room_number}', font=font)
 
-    bg.save(f'test.png')
+    buf = io.BytesIO()
+    bg.save(buf, format='PNG')
+    buf.seek(0)
+
+    return buf
