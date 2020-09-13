@@ -18,22 +18,14 @@ class GameMechanics:
         # else:
         #     легендарный моб
 
-    def room_generation(self, user_id):
-        path = normpath(f'..\\database\\{user_id}.json')
-        with open(path, 'r') as file:
-            template = json.load(file)
-
+    def room_generation(self, database, user_id):
         self._enemy_generation()
-        template['room'] = {
-            'enemy': {
-                'name': self.enemy
-            }
-        }
-        template['user_data']["number_daily_moves"] -= 1
-        template['user_data']['room'] += 1
 
-        with open(path, 'w') as file:
-            json.dump(template, file, indent=4)
+        user = database.select().where(database.user_id == user_id).get()
+        user.daily_moves -= 1
+        user.room_number += 1
+        user.enemy_name = self.enemy
+        user.save()
 
     def fight(self, user_id):
         path = normpath(f'..\\database\\{user_id}.json')

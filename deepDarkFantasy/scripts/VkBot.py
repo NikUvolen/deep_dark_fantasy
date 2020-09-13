@@ -176,7 +176,6 @@ class VkBot:
 
         user_msg = event.obj.text.lower()
         user_id = event.obj.peer_id
-
         if (user_msg == 'начать') or (user_msg == 'start'):
             set_state(user_id=event.obj.peer_id, value='0')
 
@@ -187,22 +186,18 @@ class VkBot:
             self._upload_keyboard(['Выбор героя', 'Новая комната'])
             self._send_message(menu_msg, event.obj.peer_id, keyboard=True)
         elif isfile(normpath(f'..\\database\\{event.obj.peer_id}.json')):
-            if user_msg.lower() == 'выбор героя' and check_user_state(user_id, States.S_MENU):
-                self._send_message('Герой: ', user_id)
-                set_state(user_id=event.obj.peer_id, value='1')
+            if user_msg == 'выбор героя':
+                set_state(user_id, '1')
+                self._send_message('Введите название вашего героя', event.obj.peer_id)
             elif user_msg and check_user_state(user_id, States.S_CHOICE_HERO):
-                set_state(user_id, value='0')
-                self._upload_keyboard(['Выбрать героя', 'Новая комната'])
                 print(user_msg)
-                self._send_message('Ваш герой: ' + user_msg, user_id, keyboard=True)
-            elif user_msg.lower() == 'новая комната' and self._checking_moves(peer_id=event.obj.peer_id):
+
+            if user_msg.lower() == 'новая комната':
                 self._death_check(peer_id=event.obj.peer_id)
                 self._new_room(peer_id=event.obj.peer_id)
-            elif user_msg.lower() == 'убить монстра' and self._checking_moves(peer_id=event.obj.peer_id):
+            elif user_msg.lower() == 'убить монстра':
                 self._kill_monster(peer_id=event.obj.peer_id)
                 self._death_check(peer_id=event.obj.peer_id)
-            elif user_msg.lower() == 'получить ещё ходов' and not self._checking_moves(peer_id=event.obj.peer_id):
-                self._get_moves(peer_id=event.obj.peer_id)
 
     def run(self):
         for event in self.long_poller.listen():

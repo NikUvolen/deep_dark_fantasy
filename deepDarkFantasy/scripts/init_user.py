@@ -1,34 +1,18 @@
-import json
-from os.path import isfile, normpath
+from peewee import IntegrityError
 
 
-def init_user(user_id, character_name='Kirill.png'):
+def init_user(datadase, user_id, character_name='Kirill.png'):
     """
     Функция проверяет есть ли пользователь в БД.
     Если нет - добавляет.
-
-    state: 0 - Инициальзация пользователя
-    state: 1 - Выбор героя
-    state: 2 - Начало игры
     """
-    path = f'..\\database\\{user_id}.json'
-    if isfile(path):
+    try:
+        datadase.create(user_id=user_id,
+                        daily_moves=30,
+                        room_number=0,
+                        character_name=character_name,
+                        character_hp=100,
+                        enemy_name=None)
         return True
-    else:
-        template = {
-            "user_data": {
-                "state": "0",
-                "user_id": user_id,
-                "number_daily_moves": 30,
-                "room": 0
-            },
-            "game_data": {
-                "character": {
-                    "name": character_name,
-                    "hp": 100
-                },
-            },
-            "room": {}
-        }
-        with open(path, 'w') as file:
-            json.dump(template, file, indent=4)
+    except IntegrityError:
+        return False
